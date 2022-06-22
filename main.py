@@ -35,8 +35,8 @@ class QuizStarter:
   def __init__(self, parent):
     background_color = "OldLace"
     
-    self.heading_label = Label (parent, text = "NZ Road Rules", font=("Tw Cen MT", "18", "bold"), bg=background_color)
-    self.heading_label.grid(row=0)
+    self.heading_label = Label (parent, text = "Sleep Quiz", font=("Tw Cen MT", "18", "bold"), bg=background_color)
+    self.heading_label.place(x=10,y=200)
     
     self.user_label = Label (parent, text = "Please enter your name below", font=("Tw Cen MT", "16"), bg=background_color)
     self.user_label.grid(row=1, pady=20)
@@ -145,10 +145,11 @@ class Quiz:
 #..........Starting point of Program..........#
 if __name__ == "__main__":
   root = Tk()
-  root.title("NZ Road Rules Quiz")
+  root.title("Sleep Quiz")
+  root.geometry("500x500")
 
   bg_image = Image.open("sleepquiz.png") #need to use Image if need to resize 
-  bg_image = bg_image.resize((450, 500), Image.ANTIALIAS)
+  bg_image = bg_image.resize((500, 500), Image.ANTIALIAS)
   bg_image = ImageTk.PhotoImage(bg_image) 
         #self.bg_image = PhotoImage(file="Sleepquiz.png")
 

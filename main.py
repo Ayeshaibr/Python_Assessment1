@@ -35,17 +35,12 @@ class QuizStarter:
   def __init__(self, parent):
     background_color = "OldLace"
     
-    self.heading_label = Label (parent, text = "Sleep Quiz", font=("Tw Cen MT", "18", "bold"), bg=background_color)
-    self.heading_label.place(x=10,y=200)
     
-    self.user_label = Label (parent, text = "Please enter your name below", font=("Tw Cen MT", "16"), bg=background_color)
-    self.user_label.grid(row=1, pady=20)
-
     self.entry_box= Entry (parent)
-    self.entry_box.grid(row=2, pady=20 )
+    self.entry_box.place(width=200,height=28,x=150,y=390)
 
     self.continue_button = Button (parent, text = "Continue", bg= "pink", command=self.name_collection)
-    self.continue_button.grid(row=3, pady=20)
+    self.continue_button.place(width=100,height=35,x=200, y=440)
     
   def name_collection(self):
     name = self.entry_box.get()

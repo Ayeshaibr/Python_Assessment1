@@ -7,16 +7,16 @@ global questions_answers
 asked = []
 
 questions_answers = {
-  1: ["What must you do when you see blue and red flashing lights behind you?", 'Speed up to get out of the way', 'Slow down and drive carefully', 'Slow down and stop', 'Drive on as usual', 'Slow down and stop', 3],
-  2: ["You may stop on a motorway only:", 'If there is an emergency', 'To let down or pick up passengers', 'To make a U-turn', 'To stop and take a photo', 'If there is an emergency', 1],
-  3: ["When coming up to a pedestrian crossing without a raised traffic island, what must you do?", 'Speed up before the pedestrians cross', 'Stop and give way to pedestrians on any part of the crossing', 'Sound the horn on your vehicle to warn the pedestrians', 'Slow down to 30km/h', 'Stop and give way to pedestrians on any part of the crossing', 2],
-  4: ["Can you stop on a bus stop in a private motor vehicle?", 'Only between midnight and 6am', 'Under no circumstances', 'When dropping off passengers', 'Only if it is less than 5 minutes', 'Under no circumstances', 2],
-  5: ["What is the maximum speed you may drive if you have a 'space saver wheel' fitted? (km/h)", '70 km/h', '100 km/h so you do not hold up traffic', '80 km/h and if the wheel spacer displays a lower limit that applies', '90 km/h', '80 km/h and if the wheel spacer displays a lower limit that applies', 3],
-  6: ["When following another vehicle on a dusty road, you should:", 'Speed up to get passed', "Turn your vehicle's windscreen wipers on", 'Stay back from the dust cloud', "Turn you vehicle's headlights on", 'Stay back from the dust cloud', 3],
-  7: ["What does the sign containing the letters 'LSZ' mean", "Low safety zone", "Low stability zone", "Lone star zone", "Limited speed zone", "Limited speed zone", 4],
-  8: ["What speed are you allowed to pass a school bus that has stopped to let students get on or off?", '20 km/h', '30 km/h', '70 km/h', '10 km/h', '20 km/h', 1],
-  9: ["What is the maximum distance a load may extend in front of a car?", '2 meters forward of the front edge of the front seat', '4 meters forward of the front edge of the front seat', '3 meters forward of the front edge of the front seat', '2.5 meters forward of the front edge of the front seat', '3 meters forward of the front edge of the front seat', 3],
-  10: ["To avoid being blinded by the headlights of another vehicle coming towards you, what should you do?", 'Look to the left of the road', 'Look to the centre of the road', 'Wear sunglsses that have sufficient strength', 'Look to the right side of the road', 'Look to the left of the road', 1]
+  1: ["How many hours of sleep do teenagers (aged 13-18) need per 24 hours?", '4-6 hours', '6-8 hours', '8-10 hours', '10-12 hours', '8-10 hours', 3],
+  2: ["What is Somnambulism?", "Sleep Walking","Insomnia","Sleep Paralysis","Sleep Apnea","Sleep Walking", 1],
+  3: ["Which of the following is the most common cause of nightmares?", "Stress and Anxiety", "Eating too much spicy food", "DNA cell mutations", "Excess Dopamine", "Stress and Anxiety", 1 ],
+  4: ["Sleep Paralysis is the temporary … while falling asleep or upon waking.", "Loss of sight", "Pain in the abdomen", "Inability to move or speak", "Blurred vision", "Inability to move or speak", 3],
+  5: ["What are the effects of Sleep Deprivation or poor sleeping habits?", "Memory issues and trouble with thinking/concentration", "Increased risk of Diabetes and Heart Disease", "Weakened immune system and Weight Gain", "All of the above", "All of the above",4],
+  6: ["Which mammals willingly delay their sleep?", "Whales", "Humans", "Monkeys", "All of the above","Humans",2],
+  7: ["Sleep apnea is characterised by pauses in breathing while you sleep. These pauses can occur how many times per hour?", "Upto 5 times", "Upto 10 times", "Upto 20 times", "30 times or more", "30 times or more", 4 ],
+  8: ["Which animals hold each others’ hands when they sleep?", "Wolves", "Sea Otters", "Red Pandas", "Lions", "Sea Otters", 2 ],
+  9: ["What is the normal time it takes for most people to fall asleep at night?", "5-10 minutes", "10-20 minutes", "20-30 minutes", "30-40 minutes", "10-20 minutes", 2],
+  10: ["In which phase during sleep is the brain the most active, and has the most  vivid dreams?", "REM", "Post-Drome", "Retinopathy", "Metaphase", "REM", 1]
 
 }
 
@@ -31,7 +31,7 @@ def randomiser():
 
 
 
-class QuizStarter:
+class StartingPage:
   def __init__(self, parent):
     background_color = "OldLace"
     
@@ -39,26 +39,26 @@ class QuizStarter:
     self.entry_box= Entry (parent)
     self.entry_box.place(width=200,height=28,x=150,y=390)
 
-    self.continue_button = Button (parent, text = "Continue", bg= "pink", command=self.name_collection)
+    self.continue_button = Button (parent, text = "Start", bg= "pink", command=self.name_collection)
     self.continue_button.place(width=100,height=35,x=200, y=440)
     
   def name_collection(self):
     name = self.entry_box.get()
     names_list.append(name)
-    print(names_list)
-    self.quiz_frame.destroy()
-    Quiz(root) 
+    self.entry_box.destroy()
+    self.continue_button.destroy()
+    QuizPage(root) 
 
-class Quiz:
+class QuizPage:
   def __init__(self, parent):
-    background_color = "OldLace"
+    background_color = "#0F044C"
     self.quiz_frame = Frame (parent, bg = background_color, padx = 100, pady = 100)
     self.quiz_frame.grid()
     
     randomiser()
 
-    self.question_label = Label (self.quiz_frame, text = questions_answers[qnum][0], font=("Tw Cen MT", "18", "bold"), bg=background_color)
-    self.question_label.grid(row=0, padx=10, pady=10)
+    self.question_label = Label (self.quiz_frame, text = questions_answers[qnum][0], font=("Tw Cen MT", "18", "bold"), bg="#737373", highlightthickness=4, highlightcolor= "white")
+    self.question_label.place(x=10,y=10)
 
     self.var1 = IntVar()
     
@@ -152,5 +152,5 @@ if __name__ == "__main__":
   image_label= Label(root, image=bg_image)
   image_label.place(x=0, y=0, relwidth=1, relheight=1) 
   # make label l to fit the parent window always
-  quizStarter_object = QuizStarter(root)
+  quizStarter_object = StartingPage(root)
   root.mainloop()

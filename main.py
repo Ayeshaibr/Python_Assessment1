@@ -51,14 +51,14 @@ class StartingPage:
 
 class QuizPage:
   def __init__(self, parent):
-    background_color = "#0F044C"
-    self.quiz_frame = Frame (parent, bg = background_color, padx = 100, pady = 100)
+    background_color = "light blue"
+    self.quiz_frame = Frame (parent, bg = background_color, padx = 160, pady = 130)
     self.quiz_frame.grid()
     
     randomiser()
 
     self.question_label = Label (self.quiz_frame, text = questions_answers[qnum][0], font=("Tw Cen MT", "18", "bold"), bg="#737373", highlightthickness=4, highlightcolor= "white")
-    self.question_label.place(x=10,y=10)
+    self.question_label.grid(row=0, sticky=W)
 
     self.var1 = IntVar()
     

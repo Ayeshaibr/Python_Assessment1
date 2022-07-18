@@ -4,15 +4,16 @@ from PIL import Image, ImageTk
 
 names_list = []
 asked = []
+score = 0 
 
 
-def randomiser():
-    global qnum
-    qnum = random.randint(1,10)
-    if qnum not in asked:
-      asked.append(qnum)
-    elif qnum in asked:
-      randomiser()
+def randomize():
+    global qnumber
+    qnumber = random.randint(1,10)
+    if qnumber not in asked:
+      asked.append(qnumber)
+    elif qnumber in asked:
+      randomize()
 
 
 class StartingPage:
@@ -39,84 +40,190 @@ class QuizPage:
     self.quiz_frame = Frame (parent, bg = background_color, padx = 30, pady = 30)
     self.quiz_frame.grid()
     
-    randomiser()
+    randomize()
 
-    self.question_label = Label (self.quiz_frame, text = questions_answers[qnum][0], font=("Tw Cen MT", "17", "bold"), bg="grey", highlightthickness=4, highlightcolor= "white")
+    self.question_label = Label (self.quiz_frame, text = quiz_content[qnumber][0], font=("Tw Cen MT", "17", "bold"), bg="grey", highlightthickness=4, highlightcolor= "white")
     self.question_label.grid(row=0, column=0)
 
     self.var1 = IntVar()
     
 
     #radio button 1 to hold first choice answer
-    self.rb1 = Radiobutton (self.quiz_frame, text = questions_answers[qnum][1], font=("Helvetica", "12"), bg=background_color, fg="white", value=1, padx=10, pady=10, variable=self.var1, background=background_color)
+    self.rb1 = Radiobutton (self.quiz_frame, text = quiz_content[qnumber][1], font=("Helvetica", "12"), bg=background_color, fg="white", value=1, padx=10, pady=10, variable=self.var1, selectcolor= "#0F044C", background=background_color)
     self.rb1.grid(row=1,pady=9, sticky=W)
 
     #radio button 2
-    self.rb2 = Radiobutton (self.quiz_frame, text = questions_answers[qnum][2], font=("Helvetica", "12"), bg=background_color, value=2, fg="white", selectcolor= "white", padx=10, pady=10, variable=self.var1, background=background_color)
+    self.rb2 = Radiobutton (self.quiz_frame, text = quiz_content[qnumber][2], font=("Helvetica", "12"), bg=background_color, value=2, fg="white", selectcolor= "#0F044C", padx=10, pady=10, variable=self.var1, background=background_color)
     self.rb2.grid(row=2, pady=5, sticky=W)
 
     #radio button 3
-    self.rb3 = Radiobutton (self.quiz_frame, text = questions_answers[qnum][3], font=("Helvetica", "12"), bg=background_color, value=3,fg="white", padx=10, pady=10,
+    self.rb3 = Radiobutton (self.quiz_frame, text = quiz_content[qnumber][3], font=("Helvetica", "12"), bg=background_color, selectcolor= "#0F044C", value=3,fg="white", padx=10, pady=10,
                             variable=self.var1, background=background_color)
     self.rb3.grid(row=3, pady=5, sticky=W)
 
     #radio button 4
-    self.rb4 = Radiobutton (self.quiz_frame, text = questions_answers[qnum][4], font=("Helvetica", "12"), bg=background_color, value=4, fg="white", padx=10, pady=10, 
+    self.rb4 = Radiobutton (self.quiz_frame, text = quiz_content[qnumber][4], font=("Helvetica", "12"), bg=background_color, selectcolor= "#0F044C", value=4, fg="white", padx=10, pady=10, 
                             variable=self.var1, background=background_color)
     self.rb4.grid(row=4, pady=5, sticky=W)
 
     #confirm answer button 
-    self.confirm_button = Button (self.quiz_frame, text = "Confirm", bg="light blue", command=self.test_progress)
+    self.confirm_button = Button (self.quiz_frame, text = "Confirm", bg="white", command=self.score_progress)
     self.confirm_button.grid(row=5, pady=10)
 
     #score label to show score (test result so far)
-    self.score_label=Label(self.quiz_frame, text="SCORE", font=("TW Cen MT","16"), bg=background_color,)
+    self.score_label=Label(self.quiz_frame, text="SCORE", font=("TW Cen MT","16"), bg=background_color,fg="white")
     self.score_label.grid(row=6, pady=1)
     
     
 
   #Method for Editing the question label and radio buttons to show the next questions data
-  def questions_setup(self):
-    randomiser()
+  def questions_layout(self):
+    randomize()
     self.var1.set(0)
-    self.question_label.config(text=questions_answers[qnum][0], )
-    self.rb1.config(text=questions_answers[qnum][1])
-    self.rb2.config(text=questions_answers[qnum][2])
-    self.rb3.config(text=questions_answers[qnum][3])
-    self.rb4.config(text=questions_answers[qnum][4])
+    self.question_label.config(text=quiz_content[qnumber][0], )
+    self.rb1.config(text=quiz_content[qnumber][1])
+    self.rb2.config(text=quiz_content[qnumber][2])
+    self.rb3.config(text=quiz_content[qnumber][3])
+    self.rb4.config(text=quiz_content[qnumber][4])
 
   #this is the method that would get invoked when confirm answer button is cicked, to take care of progress 
-  def test_progress(self):
-    global score 
-    score=0
-    scr_label = self.score_label
-    choice = self.var1.get()
-    if len(asked)>9: #if question is last
-      if choice == questions_answers[qnum][6]: #if last question answer is correct
-        score +=1
-        scr_label.configure(text=score)
-        self.confirm_button.config(text="Confirm")
-      else: #if last question answer is wrong
-        score +=0
-        scr_label.configure(text="The correct answer is " + questions_answers[qnum][5])
-        self.confirm_button.config(text="Confirm")
-    else: #if not the last question
-      if choice==0: #if user has not made a choice
-        self.confirm_button.config(text="Try again please, you didn't select anything")
-        choice=self.var1.get()
-      else: #if user made a choice AND it is NOT the last question
-        if choice==questions_answers[qnum][6]: #if choice is correct
-          score +=1
-          scr_label.configure(text=score)
-          self.confirm_button.config(text="Confirm")
-          self.questions_setup() #run this method to move to next question
-        else: #if choice is wrong
-          score +=0
-          scr_label.configure(text="The correct answer is " + questions_answers[qnum][5])
-          self.confirm_button.config(text="Confirm")
-          self.questions_setup()
-          
+  def score_progress(self): 
+        global score # this score needs to be accessible to all questions
+        scr_label = self.score_label # renaming the score label each time the score is different
+        choice = self.var1.get()
+        if len(asked) > 9:  # if question is last
+            if choice == quiz_content[qnumber][6]:  # if last question answer is correct
+                score += 1
+                scr_label.configure(text=score)
+                self.endScreen()
+            else:
 
+            # if last question answer is wrong
+
+                score += 0
+                scr_label.configure(text='The correct answer is '
+                                    + quiz_content[qnumber][5])
+                self.endScreen()
+        else:
+
+          # if not the last question
+
+            if choice == 0:  # if user has not made a choice
+                self.confirm_button.config(text="Try again please, you didn't select anything"
+                        )
+                choice = self.var1.get()
+            else:
+
+            # if user made a choice AND it is NOT the last question
+
+                if choice == quiz_content[qnumber][6]:  # if choice is correct
+                    score += 1
+                    scr_label.configure(text=score)
+                    self.confirm_button.config(text='Confirm')
+                    self.questions_layout()  # run this method to move to next question
+                else:
+
+              # if choice is wrong
+
+                    score += 0
+                    scr_label.configure(text='The correct answer is '
+                            + quiz_content[qnumber][5])
+                    self.confirm_button.config(text='Confirm')
+                    self.questions_layout()
+
+
+
+  def endScreen(self):
+        self.question_label.destroy()
+        self.rb1.destroy()
+        self.rb2.destroy()
+        self.rb3.destroy()
+        self.rb4.destroy()
+        self.confirm_button.destroy()
+        self.score_label.destroy()
+        EndingPage(root)
+    
+  
+        name = names_list[0]
+        file = open('scoreBoard.txt', 'a')  # opens the highscores file
+        if name == 'reset':
+            file = open('scoreBoard.txt', 'w')
+        else:
+            file.write(str(score))  # turns the score into a string
+            file.write(' - ')  # writes into the text file
+            file.write(name + '\n')  # writes the name into the text file and then goes to a new line
+            file.close()  # closes the file
+        inputFile = open('scoreBoard.txt', 'r')  # opens the highscores file in read mode
+        lineList = inputFile.readlines()  # line list equals the each line in the list
+        lineList.sort()
+        top = []
+        top5 = lineList[-5:]
+        for line in top5:
+            point = line.split(' - ')
+            top.append((int(point[0]), point[1]))
+        file.close()
+        top.sort()
+        top.reverse()
+        return_string = ''
+        for i in range(len(top)):
+            return_string += '{} - {}\n'.format(top[i][0], top[i][1])
+
+        open_endscrn = EndingPage(root)
+        open_endscrn.scores_list.config(text=return_string)
+
+class EndingPage:
+  def __init__ (self, parent):
+    background_color = "#0F044C"
+    self.quiz_frame = Frame (parent, bg = background_color, padx = 30, pady = 30)
+    self.quiz_frame.grid()
+    
+    #title for ending page
+    self.score_title = Label (self.quiz_frame, text ="Scoreboard", font=("Tw Cen MT", "17", "bold"), bg="grey", highlightthickness=4, highlightcolor= "white")
+    self.score_title.grid(row=0, column=0)
+  
+    #button to go back to first page 
+    self.home_button = Button (self.quiz_frame, text = "Home Page", bg="white", command=self.home)
+    self.home_button.grid(row=5, column= 0,  pady=10)
+
+    #label box for scores
+    self.scoreboard_background = Label (self.quiz_frame, text ="", font=("Tw Cen MT", "17", "bold"), bg="grey", highlightthickness=4, highlightcolor= "white")
+    self.scoreboard_background.grid(row=1, column=0)
+
+    #quit Button
+    self.quit_button = Button (self.quiz_frame, text = "Quit", bg="white", command=self.quit_quiz)
+    self.quit_button.grid(row=5, column=1, pady=10)
+
+
+    self.scores_list = Label (self.quiz_frame, text ="", font=("Tw Cen MT", "17", "bold"), bg="grey")
+    self.scores_list.grid(row=1, column=0)
+    
+  def quit_quiz(self):
+      self.scoreboard_background.destroy()
+      self.score_title.destroy()
+      self.home_button.destroy()
+      self.scores_list.destroy()
+      self.quit_button.destroy()
+      root.withdraw()
+
+  # for the user to restart the quiz
+  def home(self):
+      self.scoreboard_background.destroy()
+      self.score_title.destroy()
+      self.home_button.destroy()
+      self.scores_list.destroy()
+      self.quit_button.destroy()
+      asked.clear() # clears the asked question list 
+      names_list.clear() # clears the name list
+      global score
+      score = 0 # resets the score back to 0 for another attempt
+      name = '' 
+
+      StartingPage(root) # opens the home screen
+
+    
+
+    
+    
 
       
 #..........Starting point of Program..........#
@@ -135,7 +242,7 @@ if __name__ == "__main__":
   image_label.place(x=0, y=0, relwidth=1, relheight=1) 
   # make label l to fit the parent window always
     
-  questions_answers = {
+  quiz_content = {
     1: ["How many hours of sleep do\n teenagers (aged 13-18) need per \n24 hours?", '4-6 hours', '6-8 hours', '8-10 hours', '10-12 hours', '8-10 hours', 3],
     2: ["What is Somnambulism?", "Sleep Walking","Insomnia","Sleep Paralysis","Sleep Apnea","Sleep Walking", 1],
     3: ["Which of the following is the most\n common cause of nightmares?", "Stress and Anxiety", "Eating too much spicy food", "DNA cell mutations", "Excess Dopamine", "Stress and Anxiety", 1 ],

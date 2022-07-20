@@ -1,6 +1,8 @@
 from tkinter import *
 import random
 from PIL import Image, ImageTk
+from tkinter import messagebox
+
 
 names_list = []
 asked = []
@@ -24,12 +26,20 @@ class StartingPage:
     self.entry_box= Entry (parent)
     self.entry_box.place(width=200,height=28,x=150,y=390)
 
-    self.continue_button = Button (parent, text = "Start", bg= "pink", command=self.name_collection)
+    self.continue_button = Button (parent, text = "Start", bg= "pink", command=self.username_check)
     self.continue_button.place(width=100,height=35,x=200, y=440)
-    
+
+  def username_check(self):
+        name = self.entry_box.get()
+        if name == '' or len(name) >= 9:
+            messagebox.showerror(message='Please enter a username between 1 and 9 characters!')  # shows error message
+        else:
+            self.name_collection()
+          
   def name_collection(self):
     name = self.entry_box.get()
     names_list.append(name)
+      
     self.entry_box.destroy()
     self.continue_button.destroy()
     QuizPage(root) 
@@ -37,13 +47,13 @@ class StartingPage:
 class QuizPage:
   def __init__(self, parent):
     background_color = "#0F044C"
-    self.quiz_frame = Frame (parent, bg = background_color, padx = 30, pady = 30)
+    self.quiz_frame = Frame (parent, bg = background_color, padx = 25, pady = 30)
     self.quiz_frame.grid()
     
     randomize()
 
     self.question_label = Label (self.quiz_frame, text = quiz_content[qnumber][0], font=("Tw Cen MT", "17", "bold"), bg="grey", highlightthickness=4, highlightcolor= "white")
-    self.question_label.grid(row=0, column=0)
+    self.question_label.grid(row=0, column=0, sticky=W)
 
     self.var1 = IntVar()
     
@@ -68,11 +78,14 @@ class QuizPage:
 
     #confirm answer button 
     self.confirm_button = Button (self.quiz_frame, text = "Confirm", bg="white", command=self.score_progress)
-    self.confirm_button.grid(row=5, pady=10)
+    self.confirm_button.grid(row=6, pady=10, sticky=E)
 
     #score label to show score (test result so far)
     self.score_label=Label(self.quiz_frame, text="SCORE", font=("TW Cen MT","16"), bg=background_color,fg="white")
-    self.score_label.grid(row=6, pady=1)
+    self.score_label.grid(row=5, pady=10)
+
+    self.quit_button = Button (self.quiz_frame, text = "Quit", bg="white", command=self.endScreen)
+    self.quit_button.grid(row=6, column=0, pady=10,sticky=W)
     
     
 
@@ -134,6 +147,7 @@ class QuizPage:
 
 
   def endScreen(self):
+        self.quiz_frame.destroy()
         self.question_label.destroy()
         self.rb1.destroy()
         self.rb2.destroy()
@@ -141,9 +155,10 @@ class QuizPage:
         self.rb4.destroy()
         self.confirm_button.destroy()
         self.score_label.destroy()
-        EndingPage(root)
+        self.quit_button.destroy()
+       
+
     
-  
         name = names_list[0]
         file = open('scoreBoard.txt', 'a')  # opens the highscores file
         if name == 'reset':
@@ -174,31 +189,31 @@ class QuizPage:
 class EndingPage:
   def __init__ (self, parent):
     background_color = "#0F044C"
-    self.quiz_frame = Frame (parent, bg = background_color, padx = 30, pady = 30)
+    self.quiz_frame = Frame (parent, bg = background_color, padx = 100, pady = 50)
     self.quiz_frame.grid()
     
     #title for ending page
     self.score_title = Label (self.quiz_frame, text ="Scoreboard", font=("Tw Cen MT", "17", "bold"), bg="grey", highlightthickness=4, highlightcolor= "white")
-    self.score_title.grid(row=0, column=0)
-  
+    self.score_title.grid(row=0, padx=10)
+    
+
+    
+    self.scores_list = Label (self.quiz_frame, text ="", font=("Tw Cen MT", "17", "bold"), bg="grey", padx=70, pady=10)
+    self.scores_list.grid(row=1, pady=10)
+    
     #button to go back to first page 
     self.home_button = Button (self.quiz_frame, text = "Home Page", bg="white", command=self.home)
-    self.home_button.grid(row=5, column= 0,  pady=10)
+    self.home_button.grid(row=2,  pady=10, sticky=W)
 
-    #label box for scores
-    self.scoreboard_background = Label (self.quiz_frame, text ="", font=("Tw Cen MT", "17", "bold"), bg="grey", highlightthickness=4, highlightcolor= "white")
-    self.scoreboard_background.grid(row=1, column=0)
 
     #quit Button
     self.quit_button = Button (self.quiz_frame, text = "Quit", bg="white", command=self.quit_quiz)
-    self.quit_button.grid(row=5, column=1, pady=10)
+    self.quit_button.grid(row=2,  pady=10, sticky= E)
 
 
-    self.scores_list = Label (self.quiz_frame, text ="", font=("Tw Cen MT", "17", "bold"), bg="grey")
-    self.scores_list.grid(row=1, column=0)
     
   def quit_quiz(self):
-      self.scoreboard_background.destroy()
+      self.quiz_frame.destroy()
       self.score_title.destroy()
       self.home_button.destroy()
       self.scores_list.destroy()
@@ -207,14 +222,14 @@ class EndingPage:
 
   # for the user to restart the quiz
   def home(self):
-      self.scoreboard_background.destroy()
+      self.quiz_frame.destroy()
       self.score_title.destroy()
       self.home_button.destroy()
       self.scores_list.destroy()
       self.quit_button.destroy()
       asked.clear() # clears the asked question list 
       names_list.clear() # clears the name list
-      global score
+      global score, name
       score = 0 # resets the score back to 0 for another attempt
       name = '' 
 
